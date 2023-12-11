@@ -10,7 +10,7 @@ FROM node:18.15.0-alpine3.17 as pruned-dependencies
 
 WORKDIR /usr/src/app
 COPY backend/package.json backend/package-lock.json ./
-COPY --from=dependencies /usr/src/node_modules ./node_modules
+COPY --from=dependencies /usr/src/app/node_modules ./node_modules
 RUN npm prune --omit=dev
 
 FROM node:18.15.0-alpine3.17 as builder
