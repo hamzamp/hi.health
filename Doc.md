@@ -2,6 +2,8 @@
 
 "This infrastructure, while functional, is intentionally kept simple for demonstration purposes. To enhance its robustness and maintainability, consider introducing additional variables for flexibility and automation. Furthermore, prioritize security enhancements, especially in the database subnet, to fortify the overall architecture. For a smoother execution"
 
+As part of the initial implementation, I opted for the use of init scripts on EC2 instances to maintain simplicity. However, for future iterations and to improve deployment processes, I am exploring the integration of Ansible into the workflow. Ansible offers a more robust and flexible approach, allowing for seamless deployment of Docker containers and efficient configuration management on EC2 instances. This shift towards Ansible aims to enhance automation, scalability, and maintainability within the infrastructure.
+
 - Infrastructure Monitoring Documentation
 This document provides guidelines on monitoring the infrastructure created using Infrastructure as Code (IaC) for a basic ordering system. The infrastructure includes a frontend and backend application hosted on EC2 instances, and an RDS database connected with IAM authentication.
 

@@ -55,7 +55,6 @@ resource "aws_nat_gateway" "nat_gateway" {
   subnet_id     = aws_subnet.pubsub.id
 }
 
-# Example: Route Table for Private Subnet
 resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.myvpc.id
 
@@ -259,7 +258,6 @@ resource "aws_instance" "backend" {
   ami = "ami-0eb11ab33f229b26c"
   instance_type = "t2.micro"
   availability_zone = "${var.AWS_REGION}b"
-  #depends_on = [aws_security_group.sg2]
   key_name = aws_key_pair.ec2key_pair.key_name
   subnet_id = "${aws_subnet.privsub.id}"
   vpc_security_group_ids = [aws_security_group.sg_backend.id]
@@ -312,18 +310,14 @@ resource "aws_db_instance" "database" {
   iam_database_authentication_enabled = true
 }
 
-# Create IAM user
 resource "aws_iam_user" "db_user" {
   name = "${var.DB_USER}"
 }
 
-# Create IAM policy that maps the database user to an IAM role
 resource "aws_iam_policy" "rds_mapping_policy" {
   name        = "rds_mapping_policy"
   description = "Policy for mapping IAM user to database user"
   
-  # Define policy statements here
-  # Example: Allow connecting to the RDS instance
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -334,13 +328,11 @@ resource "aws_iam_policy" "rds_mapping_policy" {
   })
 }
 
-# Attach the IAM policy to the IAM user
 resource "aws_iam_user_policy_attachment" "attach_mapping_policy" {
   user       = aws_iam_user.db_user.name
   policy_arn = aws_iam_policy.rds_mapping_policy.arn
 }
 
-# Create IAM role for EC2 instance
 resource "aws_iam_role" "ec2_role" {
   name = "ec2_role"
 
@@ -356,7 +348,6 @@ resource "aws_iam_role" "ec2_role" {
   })
 }
 
-# Create IAM instance profile
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
   name = "ec2_instance_profile"
   role = aws_iam_role.ec2_role.name
