@@ -243,14 +243,15 @@ resource "aws_instance" "frontend" {
               sudo apt-get install -y docker.io
               
               # Clone from GitHub
+              sudo rm -rf /opt/hi.health
               sudo git clone https://github.com/hamzamp/hi.health /opt/hi.health
 
               # build Docker image
               cd /opt/hi.health
-              docker build -t frontend -f docker/frontend.Dockerfile .
+              sudo docker build -t frontend -f docker/frontend.Dockerfile .
 
               # Run Docker container
-              sudo docker run -e BACKEND_HOST="${aws_instance.backend.private_ip}" -d -p 80:80 frontend:latest
+              sudo docker run --name frontend -e BACKEND_HOST="${aws_instance.backend.private_ip}" -d -p 80:80 frontend:latest
               EOF
 }
 
@@ -271,6 +272,7 @@ resource "aws_instance" "backend" {
               sudo apt-get install -y docker.io
               
               # Clone from GitHub
+              sudo rm -rf /opt/hi.health
               sudo git clone https://github.com/hamzamp/hi.health /opt/hi.health
 
               # build Docker image
@@ -278,7 +280,7 @@ resource "aws_instance" "backend" {
               sudo docker build -t backend -f docker/backend.Dockerfile .
 
               # Run Docker container
-              sudo docker run -e DB_HOST="${aws_db_instance.database.endpoint}" -e DB_DATABASE="app" -e DB_USERNAME="hihealth" -e DB_PASSWORD="${aws_secretsmanager_secret_version.rds_password_version.secret_string}" -d -p 3000:3000 backend:latest
+              sudo docker run --name backend -e DB_HOST="${aws_db_instance.database.endpoint}" -e DB_DATABASE="app" -e DB_USERNAME="hihealth" -e DB_PASSWORD="${aws_secretsmanager_secret_version.rds_password_version.secret_string}" -d -p 3000:3000 backend:latest
               EOF
 }
 
